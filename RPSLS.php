@@ -14,18 +14,34 @@ class RPSLS
 
     public function __construct()
     {
-        $rock = $this->elements[array_push($this->elements, new Element("rock")) - 1];
-        $paper = $this->elements[array_push($this->elements, new Element("paper")) - 1];
-        $scissors = $this->elements[array_push($this->elements, new Element("scissors")) - 1];
+//        $rock = $this->elements[array_push($this->elements, new Element("rock")) - 1];
+//        $paper = $this->elements[array_push($this->elements, new Element("paper")) - 1];
+//        $scissors = $this->elements[array_push($this->elements, new Element("scissors")) - 1];
+        $rock = $this->addElement(new Element("rock"));
+        $paper = $this->addElement(new Element("paper"));
+        $scissors = $this->addElement(new Element("scissors"));
+        $lizard = $this->addElement(new Element("lizard"));
+        $spock = $this->addElement(new Element("spock"));
 
-        $rock->setBeats([self::SCISSORS => "crushes"]);
-        $rock->setLoses([self::PAPER => "is covered by"]);
+        $rock->setBeats([$scissors->name() => "crushes", $lizard->name() => "crushes"]);
+        $rock->setLoses([$paper->name() => "is covered by", $spock->name() => "is vaporized by"]);
 
-        $paper->setBeats([self::ROCK => "covers"]);
-        $paper->setLoses([self::SCISSORS => "is cut by"]);
+        $paper->setBeats([$rock->name() => "covers", $spock->name() => "disproves"]);
+        $paper->setLoses([$scissors->name() => "is cut by", $lizard->name() => "is eaten by"]);
 
-        $scissors->setBeats([self::PAPER => "cut"]);
-        $scissors->setLoses([self::ROCK => "is crushed by"]);
+        $scissors->setBeats([$paper->name() => "cut", $lizard->name() => "decapitates"]);
+        $scissors->setLoses([$rock->name() => "are crushed by", $spock->name() => "are smashed by"]);
+
+        $lizard->setBeats([$spock->name() => "poisons", $paper->name() => "eats"]);
+        $lizard->setLoses([$rock->name() => "is crushed by", $scissors->name() => "is decapitated by"]);
+
+        $spock->setBeats([$scissors->name() => "smashes", $rock->name() => "vaporizes"]);
+        $spock->setLoses([$paper->name() => "is disproved by", $lizard->name() => "is poisoned by"]);
+    }
+
+    private function addElement($element)
+    {
+        return $this->elements[array_push($this->elements, $element) - 1];
     }
 
     public function play(Element $playerElement, Element $opponentElement): void
