@@ -2,43 +2,55 @@
 
 require_once "Element.php";
 
-class RPSLS {
-    private ?string $winner = null;
-
+class RPSLS
+{
     const PLAYER = "player";
     const OPPONENT = "opponent";
-
     const ROCK = "rock";
     const PAPER = "paper";
     const SCISSORS = "scissors";
+    private ?string $winner = null;
     private array $elements = [];
 
     public function __construct()
     {
-        $this->elements = [
-            self::ROCK => new Element("rock"),
-            self::PAPER => new Element("paper"),
-            self::SCISSORS => new Element("scissors")
-        ];
-        $this->elements[self::ROCK]->setBeats([self::SCISSORS => "crushes"]);
-        $this->elements[self::ROCK]->setLoses([self::PAPER => "is covered by"]);
+        $rock = $this->elements[array_push($this->elements, new Element("rock")) - 1];
+        $paper = $this->elements[array_push($this->elements, new Element("paper")) - 1];
+        $scissors = $this->elements[array_push($this->elements, new Element("scissors")) - 1];
 
-        $this->elements[self::PAPER]->setBeats([self::ROCK => "covers"]);
-        $this->elements[self::PAPER]->setLoses([self::SCISSORS => "is cut by"]);
+        $rock->setBeats([self::SCISSORS => "crushes"]);
+        $rock->setLoses([self::PAPER => "is covered by"]);
 
-        $this->elements[self::SCISSORS]->setBeats([self::PAPER => "cut"]);
-        $this->elements[self::SCISSORS]->setLoses([self::ROCK => "is crushed by"]);
+        $paper->setBeats([self::ROCK => "covers"]);
+        $paper->setLoses([self::SCISSORS => "is cut by"]);
+
+        $scissors->setBeats([self::PAPER => "cut"]);
+        $scissors->setLoses([self::ROCK => "is crushed by"]);
+    }
+
+    public function play(Element $playerElement, Element $opponentElement): void
+    {
+        $this->winner = $this->determineWinner($playerElement, $opponentElement);
+        $this->announcePicks($playerElement, $opponentElement);
+        $this->announceMatch($playerElement, $opponentElement);
+        $this->announceWinner();
     }
 
     private function determineWinner(Element $playerElement, Element $opponentElement): ?string
     {
-        if ($playerElement->beats($opponentElement)){
+        if ($playerElement->beats($opponentElement)) {
             return self::PLAYER;
         }
-        if ($playerElement->loses($opponentElement)){
+        if ($playerElement->loses($opponentElement)) {
             return self::OPPONENT;
         }
         return null;
+    }
+
+    private function announcePicks(Element $playerElement, Element $opponentElement): void
+    {
+        echo "You picked {$playerElement->name()}!\n";
+        echo "Opponent picked {$opponentElement->name()}!\n";
     }
 
     private function announceMatch(Element $playerElement, Element $opponentElement): void
@@ -61,20 +73,6 @@ class RPSLS {
         }
     }
 
-    private function announcePicks(Element $playerElement, Element $opponentElement): void
-    {
-        echo "You picked {$playerElement->name()}!\n";
-        echo "Opponent picked {$opponentElement->name()}!\n";
-    }
-
-    public function play(Element $playerElement, Element $opponentElement): void
-    {
-        $this->winner = $this->determineWinner($playerElement, $opponentElement);
-        $this->announcePicks($playerElement, $opponentElement);
-        $this->announceMatch($playerElement, $opponentElement);
-        $this->announceWinner();
-    }
-
     public function getElements(): array
     {
         return $this->elements;
@@ -82,26 +80,29 @@ class RPSLS {
 }
 
 $RPSLS = new RPSLS();
-$possibleElements = array_keys($RPSLS->getElements());
+$elements = $RPSLS->getElements();
+
 echo "Pick an element! ";
 echo "(";
-foreach ($possibleElements as $index => $element) {
+foreach ($elements as $index => $element) {
     if ($index != 0) {
         echo ", ";
     }
-    echo "$element";
+    echo "{$element->name()}";
 }
 echo ")\n";
 
-while(true) {
+while (true) {
     $userElement = strtolower(readline("Element - "));
-    if (!in_array($userElement, $possibleElements)) {
-        echo "Invalid element!";
-        continue;
+    foreach ($elements as $element) {
+        if ($userElement == $element->name()){
+            $userElement = $element;
+            break 2;
+        }
     }
-    break;
+    echo "Invalid element!\n";
 }
 
-$opponentElement = $RPSLS->getElements()[array_rand($RPSLS->getElements())];
+$opponentElement = $elements[array_rand($elements)];
 
-$RPSLS->play($RPSLS->getElements()[$userElement], $opponentElement);
+$RPSLS->play($userElement, $opponentElement);
