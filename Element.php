@@ -13,17 +13,17 @@ class Element
         $this->relationships = ["beats" => [], "loses" => []];
     }
 
-    public function beats(Element $element)
+    public function beats(Element $element): bool
     {
         return in_array($element, $this->relationships["beats"]);
     }
 
-    public function symbol()
+    public function symbol(): string
     {
         return $this->symbol;
     }
 
-    public function name()
+    public function name(): string
     {
         return $this->name;
     }
