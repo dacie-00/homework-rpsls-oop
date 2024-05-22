@@ -6,9 +6,6 @@ class RPSLS
 {
     const PLAYER = "player";
     const OPPONENT = "opponent";
-    const ROCK = "rock";
-    const PAPER = "paper";
-    const SCISSORS = "scissors";
     private ?string $winner = null;
     private array $elements = [];
 
