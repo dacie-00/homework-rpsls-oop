@@ -11,9 +11,6 @@ class RPSLS
 
     public function __construct()
     {
-//        $rock = $this->elements[array_push($this->elements, new Element("rock")) - 1];
-//        $paper = $this->elements[array_push($this->elements, new Element("paper")) - 1];
-//        $scissors = $this->elements[array_push($this->elements, new Element("scissors")) - 1];
         $rock = $this->addElement(new Element("rock"));
         $paper = $this->addElement(new Element("paper"));
         $scissors = $this->addElement(new Element("scissors"));
