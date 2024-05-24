@@ -16,6 +16,11 @@ class Element
         return isset($this->relationships["beats"][$element->name()]);
     }
 
+    public function name(): string
+    {
+        return $this->name;
+    }
+
     public function loses(Element $element): bool
     {
         return isset($this->relationships["loses"][$element->name()]);
@@ -29,11 +34,6 @@ class Element
     public function setLoses(array $loses): void
     {
         $this->relationships["loses"] = $loses;
-    }
-
-    public function name(): string
-    {
-        return $this->name;
     }
 
     public function verb(Element $opponentElement): string
